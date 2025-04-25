@@ -1,6 +1,6 @@
-namespace Wjt.CinemaWorld.Config;
+namespace Wjt.FilmWorld.Config;
 
-public class CinemaWorldApiOptions
+public class FilmWorldApiOptions
 {
     public string BaseUrl { get; set; } = string.Empty;
     public string AccessToken { get; set; } = string.Empty;

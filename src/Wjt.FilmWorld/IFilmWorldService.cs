@@ -1,8 +1,8 @@
-namespace Wjt.CinemaWorld;
+namespace Wjt.FilmWorld;
 
-using Wjt.CinemaWorld.Payloads;
+using Wjt.FilmWorld.Payloads;
 
-public interface ICinemaWorldService
+public interface IFilmWorldService
 {
     Task<(MovieDetails?, HttpResponseMessage)> GetMovieDetailsAsync(string id);
     Task<(MoviesResponse?, HttpResponseMessage)> GetMoviesAsync();
