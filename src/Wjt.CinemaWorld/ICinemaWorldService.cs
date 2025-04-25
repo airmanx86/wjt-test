@@ -1,3 +1,5 @@
+namespace Wjt.CinemaWorld;
+
 using Wjt.CinemaWorld.Payloads;
 
 public interface ICinemaWorldService

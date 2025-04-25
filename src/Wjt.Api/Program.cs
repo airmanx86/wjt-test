@@ -1,3 +1,4 @@
+using Wjt.CinemaWorld;
 using Wjt.CinemaWorld.Config;
 
 var builder = WebApplication.CreateBuilder(args);
