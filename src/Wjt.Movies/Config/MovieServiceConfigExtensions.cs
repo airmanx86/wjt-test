@@ -5,14 +5,16 @@ using Microsoft.Extensions.DependencyInjection;
 
 public static class MovieServiceConfigExtensions
 {
-    public static IServiceCollection AddMovieService(this IServiceCollection services)
+    public static IServiceCollection AddMovieService(this IServiceCollection services, MovieServiceOptions? options)
     {
+        ArgumentNullException.ThrowIfNull(options);
+
         services.AddScoped<IMovieService, MovieService>()
             .AddHybridCache(
-                options => options.DefaultEntryOptions = new HybridCacheEntryOptions
+                cacheOptions => cacheOptions.DefaultEntryOptions = new HybridCacheEntryOptions
                 {
-                    Expiration = TimeSpan.FromSeconds(30),
-                    LocalCacheExpiration = TimeSpan.FromSeconds(30),
+                    Expiration = TimeSpan.FromSeconds(options.CacheDurationInSeconds),
+                    LocalCacheExpiration = TimeSpan.FromSeconds(options.CacheDurationInSeconds),
                 });
 
         return services;

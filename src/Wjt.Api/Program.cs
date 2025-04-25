@@ -10,7 +10,7 @@ builder.Services
     .AddOpenApi()
     .AddCinemaWorldService(builder.Configuration.GetSection("CinemaWorldApi").Get<CinemaWorldApiOptions>())
     .AddFilmWorldService(builder.Configuration.GetSection("FilmWorldApi").Get<FilmWorldApiOptions>())
-    .AddMovieService();
+    .AddMovieService(builder.Configuration.GetSection("MovieService").Get<MovieServiceOptions>());
 
 var app = builder.Build();
 
