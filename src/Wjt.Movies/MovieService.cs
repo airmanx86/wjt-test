@@ -8,9 +8,9 @@ using Wjt.Movies.Payloads;
 
 public class MovieService(ICinemaWorldService cinemaWorldService, IFilmWorldService filmWorldService) : IMovieService
 {
-    public async IAsyncEnumerable<MovieItem> GetMoviesAsync()
+    public async IAsyncEnumerable<MovieItem> GetMoviesAsync(string? partialTitle = "")
     {
-        await foreach (var getMoviesTask in Task.WhenEach(GetMoviesFromCinemaWorldAsync(), GetMoviesFromFilmWorldAsync()))
+        await foreach (var getMoviesTask in Task.WhenEach(GetMoviesFromCinemaWorldAsync(partialTitle), GetMoviesFromFilmWorldAsync(partialTitle)))
         {
             var movies = await getMoviesTask;
 
@@ -21,7 +21,7 @@ public class MovieService(ICinemaWorldService cinemaWorldService, IFilmWorldServ
         }
     }
 
-    private async Task<IEnumerable<MovieItem>> GetMoviesFromCinemaWorldAsync()
+    private async Task<IEnumerable<MovieItem>> GetMoviesFromCinemaWorldAsync(string? partialTitle)
     {
         var (cinemaWorldMovies, cinemaResponse) = await cinemaWorldService.GetMoviesAsync();
 
@@ -29,6 +29,7 @@ public class MovieService(ICinemaWorldService cinemaWorldService, IFilmWorldServ
         {
             return cinemaWorldMovies.Movies
                 .Where(m => m.Type == "movie")
+                .Where(m => string.IsNullOrEmpty(partialTitle) || m.Title.Contains(partialTitle, StringComparison.OrdinalIgnoreCase))
                 .Select(m => new MovieItem
                 (
                     Title: m.Title,
@@ -42,7 +43,7 @@ public class MovieService(ICinemaWorldService cinemaWorldService, IFilmWorldServ
         return [];
     }
 
-    private async Task<IEnumerable<MovieItem>> GetMoviesFromFilmWorldAsync()
+    private async Task<IEnumerable<MovieItem>> GetMoviesFromFilmWorldAsync(string? partialTitle)
     {
         var (filmWorldMovies, filmResponse) = await filmWorldService.GetMoviesAsync();
 
@@ -50,6 +51,7 @@ public class MovieService(ICinemaWorldService cinemaWorldService, IFilmWorldServ
         {
             return filmWorldMovies.Movies
                 .Where(m => m.Type == "movie")
+                .Where(m => string.IsNullOrEmpty(partialTitle) || m.Title.Contains(partialTitle, StringComparison.OrdinalIgnoreCase))
                 .Select(m => new MovieItem
                 (
                     Title: m.Title,

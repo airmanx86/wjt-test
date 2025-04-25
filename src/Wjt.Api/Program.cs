@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using Wjt.CinemaWorld.Config;
 using Wjt.FilmWorld.Config;
 using Wjt.Movies;
@@ -21,9 +22,9 @@ app.UseHttpsRedirection();
 
 app.MapGet("/api/health", () => "I am alive!");
 
-app.MapGet("/api/movies", (IMovieService movieService) =>
+app.MapGet("/api/movies", (IMovieService movieService, [FromQuery(Name = "title")]string? partialTitle) =>
 {
-    var filmWorldMovies = movieService.GetMoviesAsync();
+    var filmWorldMovies = movieService.GetMoviesAsync(partialTitle);
     return Results.Ok(filmWorldMovies);
 });
 
