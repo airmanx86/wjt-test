@@ -13,6 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="../Wjt.CinemaWorld/Wjt.CinemaWorld.csproj" />
     <ProjectReference Include="../Wjt.FilmWorld/Wjt.FilmWorld.csproj" />
+    <ProjectReference Include="../Wjt.Movies/Wjt.Movies.csproj" />
   </ItemGroup>
 
 </Project>
