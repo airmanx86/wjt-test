@@ -8,9 +8,9 @@ using Wjt.CinemaWorld.Payloads;
 
 public class CinemaWorldService(HttpClient httpClient): ICinemaWorldService
 {
-    private const string MoviesEndpoint = "/movies";
+    private const string MoviesEndpoint = "/api/cinemaworld/movies";
 
-    private const string MovieDetailsEndpoint = "/movie/";
+    private const string MovieDetailsEndpoint = "/api/cinemaworld/movie/";
 
     private readonly HttpClient _httpClient = httpClient;
 
