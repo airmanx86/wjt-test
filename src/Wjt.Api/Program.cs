@@ -1,15 +1,14 @@
-using Wjt.CinemaWorld;
 using Wjt.CinemaWorld.Config;
-using Wjt.FilmWorld;
 using Wjt.FilmWorld.Config;
+using Wjt.Movies;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
     .AddOpenApi()
     .AddCinemaWorldService(builder.Configuration.GetSection("CinemaWorldApi").Get<CinemaWorldApiOptions>())
-    .AddFilmWorldService(builder.Configuration.GetSection("FilmWorldApi").Get<FilmWorldApiOptions>());
-
+    .AddFilmWorldService(builder.Configuration.GetSection("FilmWorldApi").Get<FilmWorldApiOptions>())
+    .AddScoped<IMovieService, MovieService>();
 
 var app = builder.Build();
 
@@ -22,23 +21,10 @@ app.UseHttpsRedirection();
 
 app.MapGet("/api/health", () => "I am alive!");
 
-app.MapGet("/api/movies", async (ICinemaWorldService cinemaWorldService, IFilmWorldService filmWorldService) =>
+app.MapGet("/api/movies", (IMovieService movieService) =>
 {
-    var (cinemaWorldMovies, cinemaResponse) = await cinemaWorldService.GetMoviesAsync();
-    var (filmWorldMovies, filmWorldResponse) = await filmWorldService.GetMoviesAsync();
-    
-    if (cinemaResponse.IsSuccessStatusCode && filmWorldResponse.IsSuccessStatusCode)
-    {
-        var combinedMovies = new
-        {
-            CinemaWorldMovies = cinemaWorldMovies,
-            FilmWorldMovies = filmWorldMovies
-        };
-
-        return Results.Ok(combinedMovies);
-    }
-
-    return Results.Problem("Error fetching movies");
+    var filmWorldMovies = movieService.GetMoviesAsync();
+    return Results.Ok(filmWorldMovies);
 });
 
 app.Run();
