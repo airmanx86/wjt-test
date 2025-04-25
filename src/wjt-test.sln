@@ -5,6 +5,8 @@ VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wjt.CinemaWorld", "Wjt.CinemaWorld\Wjt.CinemaWorld.csproj", "{57244298-1365-42A9-8AEF-999B5A742E6D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wjt.Api", "Wjt.Api\Wjt.Api.csproj", "{663B968D-64C4-410E-814E-8ED52FC45C73}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{57244298-1365-42A9-8AEF-999B5A742E6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{57244298-1365-42A9-8AEF-999B5A742E6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{57244298-1365-42A9-8AEF-999B5A742E6D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{663B968D-64C4-410E-814E-8ED52FC45C73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{663B968D-64C4-410E-814E-8ED52FC45C73}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{663B968D-64C4-410E-814E-8ED52FC45C73}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{663B968D-64C4-410E-814E-8ED52FC45C73}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
