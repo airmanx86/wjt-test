@@ -6,9 +6,21 @@ using Polly;
 
 public static class CinemaWorldServiceConfigExtensions
 {
-    public static IServiceCollection AddCinemaWorldService(this IServiceCollection services, string baseUrl, string accessToken)
+    public static IServiceCollection AddCinemaWorldService(this IServiceCollection services, CinemaWorldApiOptions? options)
     {
-        services.AddHttpClient<ICinemaWorldService, CinemaWorldService>(ConfigureCinemaWorldService(baseUrl, accessToken))
+        ArgumentNullException.ThrowIfNull(options);
+
+        if (string.IsNullOrWhiteSpace(options.BaseUrl))
+        {
+            throw new ArgumentException("BaseUrl cannot be null or empty", nameof(options));
+        }
+
+        if (string.IsNullOrWhiteSpace(options.AccessToken))
+        {
+            throw new ArgumentException("AccessToken cannot be null or empty", nameof(options));
+        }
+
+        services.AddHttpClient<ICinemaWorldService, CinemaWorldService>(ConfigureCinemaWorldService(options))
             // retry 3 times 80 + 160 + 320 = 560ms
             .AddTransientHttpErrorPolicy(
                 builder =>
@@ -19,11 +31,12 @@ public static class CinemaWorldServiceConfigExtensions
         return services;
     }
 
-        public static Action<HttpClient> ConfigureCinemaWorldService(string baseUrl, string accessToken) => client =>
+        public static Action<HttpClient> ConfigureCinemaWorldService(CinemaWorldApiOptions options) => client =>
         {
-            client.BaseAddress = new Uri(baseUrl);
+            client.BaseAddress = new Uri(options.BaseUrl);
+            client.Timeout = TimeSpan.FromMilliseconds(options.TimeoutInMilliseconds);
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            client.DefaultRequestHeaders.Add("x-access-token", accessToken);
+            client.DefaultRequestHeaders.Add("x-access-token", options.AccessToken);
         };
 }
