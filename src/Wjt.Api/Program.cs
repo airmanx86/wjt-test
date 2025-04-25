@@ -22,7 +22,7 @@ app.UseHttpsRedirection();
 
 app.MapGet("/api/health", () => "I am alive!");
 
-app.MapGet("/api/movies", (IMovieService movieService, [FromQuery(Name = "title")]string? partialTitle) =>
+app.MapGet("/api/movies", (IMovieService movieService, [FromQuery(Name = "title")]string partialTitle = "") =>
 {
     var filmWorldMovies = movieService.GetMoviesAsync(partialTitle);
     return Results.Ok(filmWorldMovies);

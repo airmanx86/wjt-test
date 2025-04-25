@@ -8,7 +8,7 @@ using Wjt.Movies.Payloads;
 
 public class MovieService(ICinemaWorldService cinemaWorldService, IFilmWorldService filmWorldService) : IMovieService
 {
-    public async IAsyncEnumerable<MovieItem> GetMoviesAsync(string? partialTitle = "")
+    public async IAsyncEnumerable<MovieItem> GetMoviesAsync(string partialTitle = "")
     {
         await foreach (var getMoviesTask in Task.WhenEach(GetMoviesFromCinemaWorldAsync(partialTitle), GetMoviesFromFilmWorldAsync(partialTitle)))
         {
@@ -21,7 +21,7 @@ public class MovieService(ICinemaWorldService cinemaWorldService, IFilmWorldServ
         }
     }
 
-    private async Task<IEnumerable<MovieItem>> GetMoviesFromCinemaWorldAsync(string? partialTitle)
+    private async Task<IEnumerable<MovieItem>> GetMoviesFromCinemaWorldAsync(string partialTitle)
     {
         var (cinemaWorldMovies, cinemaResponse) = await cinemaWorldService.GetMoviesAsync();
 
@@ -43,7 +43,7 @@ public class MovieService(ICinemaWorldService cinemaWorldService, IFilmWorldServ
         return [];
     }
 
-    private async Task<IEnumerable<MovieItem>> GetMoviesFromFilmWorldAsync(string? partialTitle)
+    private async Task<IEnumerable<MovieItem>> GetMoviesFromFilmWorldAsync(string partialTitle)
     {
         var (filmWorldMovies, filmResponse) = await filmWorldService.GetMoviesAsync();
 
