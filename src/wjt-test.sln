@@ -13,6 +13,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{0AB3BF05
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wjt.Test.CinemaWorld", "Wjt.Test.CinemaWorld\Wjt.Test.CinemaWorld.csproj", "{A8C31DE6-6941-4629-A679-E30CED64A116}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wjt.Test.FilmWorld", "Wjt.Test.FilmWorld\Wjt.Test.FilmWorld.csproj", "{48B5CFEC-230F-49BE-B745-3856147CB169}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,10 @@ Global
 		{A8C31DE6-6941-4629-A679-E30CED64A116}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A8C31DE6-6941-4629-A679-E30CED64A116}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A8C31DE6-6941-4629-A679-E30CED64A116}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48B5CFEC-230F-49BE-B745-3856147CB169}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48B5CFEC-230F-49BE-B745-3856147CB169}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48B5CFEC-230F-49BE-B745-3856147CB169}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48B5CFEC-230F-49BE-B745-3856147CB169}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -44,5 +50,6 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{A8C31DE6-6941-4629-A679-E30CED64A116} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
+		{48B5CFEC-230F-49BE-B745-3856147CB169} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
 	EndGlobalSection
 EndGlobal
