@@ -10,6 +10,16 @@ using Wjt.Movies.Payloads;
 
 public class MovieService(ILogger<MovieService> logger, HybridCache cache, ICinemaWorldService cinemaWorldService, IFilmWorldService filmWorldService) : IMovieService
 {
+    public async Task<MovieDetails?> GetMovieDetailsAsync(MovieVendor vendor, string id)
+    {
+        return vendor switch
+        {
+            MovieVendor.CinemaWorld => await GetMovieDetailsFromCinemaWorldAsync(id),
+            MovieVendor.FilmWorld => await GetMovieDetailsFromFilmWorldAsync(id),
+            _ => null
+        };
+    }
+
     public async IAsyncEnumerable<MovieItem> GetMoviesAsync(string partialTitle = "")
     {
         await foreach (var getMoviesTask in Task.WhenEach(GetMoviesFromCinemaWorldAsync(partialTitle), GetMoviesFromFilmWorldAsync(partialTitle)))
@@ -19,7 +29,7 @@ public class MovieService(ILogger<MovieService> logger, HybridCache cache, ICine
             foreach (var item in movies)
             {
                 yield return item;
-            }        
+            }
         }
     }
 
@@ -88,6 +98,108 @@ public class MovieService(ILogger<MovieService> logger, HybridCache cache, ICine
         {
             logger.LogError(ex, "Error fetching movies from FilmWorld, return empty list");
             return [];
+        }
+    }
+
+    private async Task<MovieDetails?> GetMovieDetailsFromCinemaWorldAsync(string id)
+    {
+        try
+        {
+            return await cache.GetOrCreateAsync($"CinemaWorldMovieDetails-{id}", async token => {
+                var (movieDetails, response) = await cinemaWorldService.GetMovieDetailsAsync(id);
+
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    return null;
+                }
+
+                response.EnsureSuccessStatusCode();
+
+                if (movieDetails != null)
+                {
+                    return new MovieDetails
+                    (
+                        Title: movieDetails.Title,
+                        Year: movieDetails.Year,
+                        Rated: movieDetails.Rated,
+                        Released: movieDetails.Released,
+                        Runtime: movieDetails.Runtime,
+                        Genre: movieDetails.Genre,
+                        Director: movieDetails.Director,
+                        Writer: movieDetails.Writer,
+                        Actors: movieDetails.Actors,
+                        Plot: movieDetails.Plot,
+                        Language: movieDetails.Language,
+                        Country: movieDetails.Country,
+                        Awards: movieDetails.Awards,
+                        Poster: movieDetails.Poster,
+                        Metascore: movieDetails.Metascore,
+                        Rating: movieDetails.Rating,
+                        Votes: movieDetails.Votes,
+                        ExternalID: movieDetails.ID,
+                        Type: movieDetails.Type,
+                        Price: movieDetails.Price
+                    );
+                }
+
+                throw new Exception("Failed to fetch movie details from CinemaWorld");
+            });
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error fetching movie details from CinemaWorld");
+            throw;
+        }
+    }
+
+    private async Task<MovieDetails?> GetMovieDetailsFromFilmWorldAsync(string id)
+    {
+        try
+        {
+            return await cache.GetOrCreateAsync($"FilmWorldMovieDetails-{id}", async token => {
+                var (movieDetails, response) = await filmWorldService.GetMovieDetailsAsync(id);
+
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    return null;
+                }
+
+                response.EnsureSuccessStatusCode();
+
+                if (movieDetails != null)
+                {
+                    return new MovieDetails
+                    (
+                        Title: movieDetails.Title,
+                        Year: movieDetails.Year,
+                        Rated: movieDetails.Rated,
+                        Released: movieDetails.Released,
+                        Runtime: movieDetails.Runtime,
+                        Genre: movieDetails.Genre,
+                        Director: movieDetails.Director,
+                        Writer: movieDetails.Writer,
+                        Actors: movieDetails.Actors,
+                        Plot: movieDetails.Plot,
+                        Language: movieDetails.Language,
+                        Country: movieDetails.Country,
+                        Awards: null,
+                        Poster: movieDetails.Poster,
+                        Metascore: movieDetails.Metascore,
+                        Rating: movieDetails.Rating,
+                        Votes: movieDetails.Votes,
+                        ExternalID: movieDetails.ID,
+                        Type: movieDetails.Type,
+                        Price: movieDetails.Price
+                    );
+                }
+
+                throw new Exception("Failed to fetch movie details from FilmWorld");
+            });
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error fetching movie details from FilmWorld");
+            throw;
         }
     }
 }
