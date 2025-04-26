@@ -29,4 +29,24 @@ app.MapGet("/api/movies", (IMovieService movieService, [FromQuery(Name = "title"
     return Results.Ok(filmWorldMovies);
 });
 
+app.MapGet("/api/movies/{vendor}/{id}", async (IMovieService movieService, MovieVendor vendor, string id) =>
+{
+    try
+    {
+        var movieDetails = await movieService.GetMovieDetailsAsync(vendor, id);
+
+        if (movieDetails == null)
+        {
+            return Results.NotFound();
+        }
+
+        return Results.Ok(movieDetails);
+    }
+    catch (Exception ex)
+    {
+        app.Logger.LogError(ex, "Error fetching movie details");
+        return Results.Problem("Movie details is unavailable", statusCode: 503);
+    }
+});
+
 app.Run();
