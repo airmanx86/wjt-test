@@ -16,10 +16,6 @@ describe('MovieDetailsView Component', () => {
         jest.clearAllMocks();
     });
 
-    const wrapper = ({ children }: { children: React.ReactNode }) => (
-        <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-    );
-
     const mockMovieId: MovieId = {
         vendor: 'CinemaWorld',
         externalID: '1',
