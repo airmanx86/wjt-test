@@ -1,0 +1,8 @@
+services:
+  movie-price-check-app-production:
+    build:
+      context: ../../
+      dockerfile: docker/production/Dockerfile
+    image: movie-price-check-app:production
+    ports:
+      - "3003:3000"

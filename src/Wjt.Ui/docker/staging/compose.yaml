@@ -1,0 +1,8 @@
+services:
+  movie-price-check-app-staging:
+    build:
+      context: ../../
+      dockerfile: docker/staging/Dockerfile
+    image: movie-price-check-app:staging
+    ports:
+      - "3002:3000"
