@@ -1,0 +1,10 @@
+services:
+  movies-api-development:
+    build:
+      context: ../../
+      dockerfile: docker/development/Dockerfile
+    image: movies-api:development
+    ports:
+      - "5256:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development

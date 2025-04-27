@@ -1,0 +1,10 @@
+services:
+  movies-api-production:
+    build:
+      context: ../../
+      dockerfile: docker/production/Dockerfile
+    image: movies-api:production
+    ports:
+      - "5259:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production

@@ -29,7 +29,11 @@ if (app.Environment.IsDevelopment())
     app.UseCors("DevelopmentCORS");
 }
 
-app.UseHttpsRedirection();
+if (app.Environment.IsProduction())
+{
+    app.UseHsts();
+    app.UseHttpsRedirection();
+}
 
 app.MapGet("/api/health", () => "I am alive!");
 
