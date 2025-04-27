@@ -1,9 +1,9 @@
 'use client';
 
-import { JSX, useState } from 'react';
+import { JSX, useState, useEffect } from 'react';
 import { Search } from 'lucide-react';
 import { useQuery, QueryClient, QueryClientProvider, useQueryClient } from '@tanstack/react-query';
-import { MovieItem, MovieId } from '@/app/lib/types';
+import { MovieItem, MovieId, MoviePriceMap } from '@/app/lib/types';
 import { fetchMovies, fetchMovieDetails } from '@/app/lib/movieClient';
 import MovieList from '@/app/components/MovieList';
 import MovieDetailsView from '@/app/components/MovieDetailsView';
@@ -22,6 +22,7 @@ function MovieSearch(): JSX.Element {
     const [searchQuery, setSearchQuery] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedMovieId, setSelectedMovieId] = useState<MovieId | null>(null);
+    const [moviePrices, setMoviePrices] = useState<MoviePriceMap>({});
     const queryClient = useQueryClient();
 
     const { data: movies = [], isLoading, isError, error } = useQuery<MovieItem[], Error>({
@@ -38,7 +39,22 @@ function MovieSearch(): JSX.Element {
     const prefetchMovieDetails = (movieId: MovieId): void => {
         queryClient.prefetchQuery({
           queryKey: ['movie', movieId],
-          queryFn: () => fetchMovieDetails(movieId),
+          queryFn: async () => { 
+            const details = await fetchMovieDetails(movieId);
+
+            if (details) {
+                setMoviePrices((prevPrices) => ({
+                    ...prevPrices,
+                    [`${movieId.vendor}-${movieId.externalID}`]: {
+                        title: details.title,
+                        year: details.year,
+                        price: details.price,
+                    }
+                }));
+            }
+
+            return details;
+          },
           staleTime: 1 * 60 * 1000,
         });
     };
@@ -47,6 +63,14 @@ function MovieSearch(): JSX.Element {
         evt.preventDefault();
         setSearchTerm(searchQuery.trim());
     };
+
+    useEffect(() => {
+        if (movies.length > 0) {
+            movies.forEach((movie) => {
+                prefetchMovieDetails({ vendor: movie.vendor, externalID: movie.externalID });
+            });
+        }
+    }, [movies]);
 
     return (
         <div className="flex flex-col items-center min-h-screen bg-gray-900 text-white py-8 px-4">
@@ -76,6 +100,7 @@ function MovieSearch(): JSX.Element {
 
                 <MovieList
                     movies={movies}
+                    moviePrices={moviePrices}
                     isLoading={isLoading}
                     isError={isError}
                     error={error}

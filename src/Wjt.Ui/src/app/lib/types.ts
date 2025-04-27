@@ -35,3 +35,11 @@ export interface MovieDetails {
     type: string;
     price: number;
 }
+
+export type MoviePriceMap = {
+    [key: string]: {
+        title: string;
+        year: string;
+        price: number;
+    }
+};

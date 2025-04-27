@@ -12,16 +12,31 @@ describe('MovieList Component', () => {
             vendor: 'CinemaWorld',
         },
         {
+            externalID: '1',
+            title: 'Movie 1',
+            year: '2021',
+            poster: 'https://example.com/movie1.jpg',
+            vendor: 'FilmWorld',
+        },
+        {
             externalID: '2',
             title: 'Movie 2',
             year: '2022',
             poster: 'https://example.com/movie2.jpg',
             vendor: 'FilmWorld',
         },
+
     ];
+
+    const mockMoviePrices = {
+        'CinemaWorld-1': { title: 'Movie 1', year: '2021', price: 10 },
+        'FilmWorld-1': { title: 'Movie 1', year: '2022', price: 9 },
+        'FilmWorld-2': { title: 'Movie 2', year: '2022', price: 15 },
+    };
 
     const defaultProps: MovieListProps = {
         movies: mockMovies,
+        moviePrices: mockMoviePrices,
         isLoading: false,
         isError: false,
         error: null,
@@ -48,7 +63,8 @@ describe('MovieList Component', () => {
 
     it('renders a list of movies', () => {
         render(<MovieList {...defaultProps} />);
-        expect(screen.getByText('Movie 1')).toBeInTheDocument();
+        const movie1 = screen.getAllByText('Movie 1');
+        expect(movie1.length).toBe(2);
         expect(screen.getByText('Movie 2')).toBeInTheDocument();
     });
 
@@ -56,15 +72,33 @@ describe('MovieList Component', () => {
         const onSelectMovie = jest.fn();
         render(<MovieList {...defaultProps} onSelectMovie={onSelectMovie} />);
 
-        fireEvent.click(screen.getByText('Movie 1'));
-        expect(onSelectMovie).toHaveBeenCalledWith({ vendor: 'CinemaWorld', externalID: '1' });
+        fireEvent.click(screen.getByText('Movie 2'));
+        expect(onSelectMovie).toHaveBeenCalledWith({ vendor: 'FilmWorld', externalID: '2' });
     });
 
     it('calls onHoverMovie when a movie is hovered', () => {
         const onHoverMovie = jest.fn();
         render(<MovieList {...defaultProps} onHoverMovie={onHoverMovie} />);
 
-        fireEvent.mouseEnter(screen.getByText('Movie 1'));
-        expect(onHoverMovie).toHaveBeenCalledWith({ vendor: 'CinemaWorld', externalID: '1' });
+        fireEvent.mouseEnter(screen.getByText('Movie 2'));
+        expect(onHoverMovie).toHaveBeenCalledWith({ vendor: 'FilmWorld', externalID: '2' });
+    });
+
+    it('renders the price of each movie if available', () => {
+        render(<MovieList {...defaultProps} />);
+        expect(screen.getByText('$10.00')).toBeInTheDocument();
+        expect(screen.getByText('$9.00')).toBeInTheDocument();
+        expect(screen.getByText('$15.00')).toBeInTheDocument();
+    });
+
+    it('does not render a price if it is not available', () => {
+        render(<MovieList {...defaultProps} moviePrices={{}} />);
+        expect(screen.queryByText('$')).not.toBeInTheDocument();
+    });
+
+    it('renders a fire icon next to the price if the movie is the cheapest', () => {
+        render(<MovieList {...defaultProps} />);
+        const fireIcon = screen.getAllByRole('cheapest', { hidden: true });
+        expect(fireIcon.length).toBe(2);
     });
 });

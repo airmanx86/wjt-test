@@ -1,10 +1,11 @@
 import { JSX } from "react";
-import { Info } from "lucide-react";
-import { MovieId, MovieItem } from "@/app/lib/types";
+import { Info, Flame } from "lucide-react";
+import { MovieId, MovieItem, MoviePriceMap } from "@/app/lib/types";
 import Spinner from "./Spinner";
 
 export interface MovieListProps {
     movies: MovieItem[];
+    moviePrices: MoviePriceMap;
     isLoading: boolean;
     isError: boolean;
     error: Error | null;
@@ -15,6 +16,7 @@ export interface MovieListProps {
 
 export default function MovieList({
     movies,
+    moviePrices,
     isLoading,
     isError,
     error,
@@ -22,6 +24,24 @@ export default function MovieList({
     onSelectMovie,
     onHoverMovie
 }: MovieListProps): JSX.Element {
+    const getPrice = (movie: MovieItem): number | undefined => {
+        const movieKey = `${movie.vendor}-${movie.externalID}`;
+        return movieKey in moviePrices ? moviePrices[movieKey].price : undefined;
+    };
+
+    const isCheapest = (movie: MovieItem): boolean => {
+        const moviePrice = getPrice(movie);
+        if (!moviePrice) {
+            return false;
+        }
+        const cheapestPrice = Math.min(
+            ...Object.values(moviePrices)
+                .filter((price) => price.title === movie.title && price.year === movie.year)
+                .map((price) => price.price)
+        );
+        return moviePrice === cheapestPrice;
+    };
+
     if (isLoading) {
         return (
             <Spinner />
@@ -46,9 +66,13 @@ export default function MovieList({
 
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {movies.map((movie) => (
+            {movies.map((movie) => {
+                const moviePrice = getPrice(movie);
+                const isCheapestMovie = isCheapest(movie);
+
+                return (
                 <div
-                    key={movie.externalID}
+                    key={`${movie.vendor}-${movie.externalID}`}
                     className="bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer"
                     onClick={() => onSelectMovie({ vendor: movie.vendor, externalID: movie.externalID })}
                     onMouseEnter={() => onHoverMovie({ vendor: movie.vendor, externalID: movie.externalID })}
@@ -61,6 +85,14 @@ export default function MovieList({
                     <div className="p-4">
                         <h3 className="text-xl font-semibold mb-1">{movie.title}</h3>
                         <p className="text-gray-400">{movie.year}</p>
+                        {moviePrice ? (
+                            <p className="text-yellow-400 font-bold flex items-center justify-start">
+                                <span>${moviePrice.toFixed(2)}</span>
+                                {isCheapestMovie && <Flame className="h-4 w-4 text-red-500 ml-2" role="cheapest" />}
+                            </p>
+                        ) : (
+                            <p className="text-gray-400">&nbsp;</p>
+                        )}
                         <button
                             className="mt-2 flex items-center text-blue-400 hover:text-blue-300 transition-colors"
                         >
@@ -68,7 +100,7 @@ export default function MovieList({
                         </button>
                     </div>
                 </div>
-            ))}
+            )})}
         </div>
     );
 }
