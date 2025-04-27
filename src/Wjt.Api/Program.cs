@@ -10,13 +10,23 @@ builder.Services
     .AddOpenApi()
     .AddCinemaWorldService(builder.Configuration.GetSection("CinemaWorldApi").Get<CinemaWorldApiOptions>())
     .AddFilmWorldService(builder.Configuration.GetSection("FilmWorldApi").Get<FilmWorldApiOptions>())
-    .AddMovieService(builder.Configuration.GetSection("MovieService").Get<MovieServiceOptions>());
+    .AddMovieService(builder.Configuration.GetSection("MovieService").Get<MovieServiceOptions>())
+    .AddCors(options =>
+    {
+        options.AddPolicy("DevelopmentCORS", builder =>
+        {
+            builder.AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+        });
+    });
 
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.UseCors("DevelopmentCORS");
 }
 
 app.UseHttpsRedirection();
