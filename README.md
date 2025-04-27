@@ -10,6 +10,13 @@ This solution is built only on Visual Studio Code on Ubuntu.
 - The App is located in `<rootDir>/src/Wtj.Ui` and it is expected that another separate coding environment open this folder directly during development
 - See `README.md` in the subfolders for more details
 
+## Quick run
+
+After setting up `<rootDir>/src/Wjt.Api/appsettings.Development.json` and `<rootDir>/src/Wjt.Ui/.env.development`,
+run `run.sh` would start both the API and App with docker compose.
+The App is reachable on [http://localhost:3000](http://localhost:3000) if nothing go wrong.
+Run `stop.sh` to stop to docker containers
+
 ## Fault tolerance
 
 The flaky APIs result are cached on the server side only when there is no error and HTTP request use `Polly` to retry.
