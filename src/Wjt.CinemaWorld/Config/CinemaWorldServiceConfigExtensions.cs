@@ -31,7 +31,12 @@ public static class CinemaWorldServiceConfigExtensions
                         .WaitAndRetryAsync(
                             3,
                             retryCount => TimeSpan.FromMilliseconds(80 * retryCount))
-                        .WrapAsync(Policy.TimeoutAsync(TimeSpan.FromMilliseconds(options.TimeoutInMilliseconds))));
+                        .WrapAsync(Policy.TimeoutAsync(TimeSpan.FromMilliseconds(options.TimeoutInMilliseconds))))
+            .AddTransientHttpErrorPolicy(
+                builder =>
+                    builder.CircuitBreakerAsync(
+                        handledEventsAllowedBeforeBreaking: 10,
+                        durationOfBreak: TimeSpan.FromSeconds(30)));
 
         return services;
     }
