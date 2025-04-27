@@ -1,4 +1,5 @@
 import { JSX } from "react";
+import Image from "next/image";
 import { X, Clock, Star, CircleCheckBig, CalendarCheck2 } from "lucide-react";
 import { useQuery } from '@tanstack/react-query';
 import { MovieId, MovieDetails } from "@/app/lib/types";
@@ -42,10 +43,12 @@ export default function MovieDetailsView({ movieId, onClose }: MovieDetailsProps
                     {!isLoading && movieDetails && (
                         <div>
                             <div className="flex flex-col md:flex-row p-6 mb-6 bg-gray-900 rounded-t-lg">
-                                <img
+                                <Image
                                     src={movieDetails.poster}
                                     alt={`${movieDetails.title} poster`}
-                                    className="w-full md:w-64 h-auto object-cover rounded-t-lg md:rounded-l-lg md:rounded-t-none"
+                                    className="w-full md:w-64 h-auto object-scale-down rounded-t-lg md:rounded-l-lg md:rounded-t-none"
+                                    width={300}
+                                    height={400}
                                 />
                                 <div className="p-6 flex flex-col">
                                     <h2 className="text-2xl font-bold mb-2">{movieDetails.title} <span className="text-gray-400">({movieDetails.year})</span></h2>

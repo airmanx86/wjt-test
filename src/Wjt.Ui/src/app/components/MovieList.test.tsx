@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import MovieList, { MovieListProps } from './MovieList';
 import { MovieItem } from '@/app/lib/types';
 

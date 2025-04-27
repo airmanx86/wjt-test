@@ -1,0 +1,10 @@
+services:
+  movies-api-staging:
+    build:
+      context: ../../
+      dockerfile: docker/staging/Dockerfile
+    image: movies-api:staging
+    ports:
+      - "5258:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Staging

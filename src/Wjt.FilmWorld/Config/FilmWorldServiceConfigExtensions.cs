@@ -31,7 +31,12 @@ public static class FilmWorldServiceConfigExtensions
                         .WaitAndRetryAsync(
                             3,
                             retryCount => TimeSpan.FromMilliseconds(80 * retryCount))
-                        .WrapAsync(Policy.TimeoutAsync(TimeSpan.FromMilliseconds(options.TimeoutInMilliseconds))));
+                        .WrapAsync(Policy.TimeoutAsync(TimeSpan.FromMilliseconds(options.TimeoutInMilliseconds))))
+            .AddTransientHttpErrorPolicy(
+                builder =>
+                    builder.CircuitBreakerAsync(
+                        handledEventsAllowedBeforeBreaking: options.FailureBeforeBreaking,
+                        durationOfBreak: TimeSpan.FromSeconds(options.DurationOfBreakInSeconds)));
 
         return services;
     }

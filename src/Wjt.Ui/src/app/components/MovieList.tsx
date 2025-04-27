@@ -1,4 +1,5 @@
 import { JSX } from "react";
+import Image from "next/image";
 import { Info, Flame } from "lucide-react";
 import { MovieId, MovieItem, MoviePriceMap } from "@/app/lib/types";
 import Spinner from "./Spinner";
@@ -59,7 +60,7 @@ export default function MovieList({
     if (movies.length === 0 && searchTerm) {
         return (
             <div className="text-center py-12">
-                <p className="text-xl text-gray-400">No movies found for "{searchTerm}"</p>
+                <p className="text-xl text-gray-400">No movies found for {`"${searchTerm}"`}</p>
             </div>
         );
     }
@@ -77,10 +78,12 @@ export default function MovieList({
                     onClick={() => onSelectMovie({ vendor: movie.vendor, externalID: movie.externalID })}
                     onMouseEnter={() => onHoverMovie({ vendor: movie.vendor, externalID: movie.externalID })}
                 >
-                    <img
+                    <Image
                         src={movie.poster}
                         alt={`${movie.title} poster`}
-                        className="w-full h-64 object-cover"
+                        className="w-full h-64 object-scale-down"
+                        width={300}
+                        height={400}
                     />
                     <div className="p-4">
                         <h3 className="text-xl font-semibold mb-1">{movie.title}</h3>

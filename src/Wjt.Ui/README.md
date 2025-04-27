@@ -19,6 +19,7 @@ To run the development server:
 ```bash
 npm run dev
 ```
+
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the Movie Price Check App.
 
 
@@ -34,8 +35,24 @@ or with watch
 npm run test:watch
 ```
 
+## Production build
+
+The `Makefile` is setup to build this app into different environment using `Docker`
+
+Create the following `.env` files for each environment
+
+- development - `.env.development`
+- staging - `.env.staging`
+- production - `.env.production`
+
+1. Run `make build-<environment>` to build the docker image.
+2. Run `make start-<environment>` to start the app in container.
+3. Run `make stop-<environment>` to stop the app container.
+
+For example, `make build-development` to build the docker image for development.
+
 ## Note
 
 1. Content Security Policy (CSP) is implemented via `middleware.ts`. External image source is allowed
 2. The page is not using server side rendering
-3. No authentication is not implemented, which mean any one can use this app without signin
+3. Authentication is not implemented, which mean any one can use this app without signin
