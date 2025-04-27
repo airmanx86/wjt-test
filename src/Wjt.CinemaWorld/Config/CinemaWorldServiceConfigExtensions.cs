@@ -35,8 +35,8 @@ public static class CinemaWorldServiceConfigExtensions
             .AddTransientHttpErrorPolicy(
                 builder =>
                     builder.CircuitBreakerAsync(
-                        handledEventsAllowedBeforeBreaking: 10,
-                        durationOfBreak: TimeSpan.FromSeconds(30)));
+                        handledEventsAllowedBeforeBreaking: options.FailureBeforeBreaking,
+                        durationOfBreak: TimeSpan.FromSeconds(options.DurationOfBreakInSeconds)));
 
         return services;
     }
