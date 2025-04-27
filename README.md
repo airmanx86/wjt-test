@@ -25,6 +25,7 @@ The frontend use react query with default retry to fetch request.
 7. Cinema World and Film World are separate services which could be hosted separately with different access token
 8. Title, Year form a movie unique key - with different vendor providing the same contents
 9. Image might need to go through a proxy, the UI need to trust https://m.media-amazon.com through and require content security policy
+10. Authentication to the App is not required
 
 ## Missing Production features
 1. Web application firewall and rate limit are not implemented

@@ -55,4 +55,4 @@ For example, `make build-development` to build the docker image for development.
 
 1. Content Security Policy (CSP) is implemented via `middleware.ts`. External image source is allowed
 2. The page is not using server side rendering
-3. No authentication is not implemented, which mean any one can use this app without signin
+3. Authentication is not implemented, which mean any one can use this app without signin
